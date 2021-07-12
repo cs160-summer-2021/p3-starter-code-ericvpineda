@@ -1,4 +1,4 @@
-.container {
+.container.page-format {
     height: 80%;
 
     display: grid;
@@ -14,28 +14,35 @@
     /* background-color: purple; */
 }
 
-canvas[resize] {
+.canvas-box {
     width: 100%;
     height: 100%;
     border: 1px solid black;
 }
 
-.palette {
+.palette-box {
     width: 100%;
-    height: 20%;
-    background-color: lightblue;   
-}
-
-/* #color-palette {
-    width: 300px;
-    background-color: #f1f1f1;
+    height: 5rem;
+    /* background-color: purple;    */
+    
     display: flex;
-    flex-wrap: wrap;
-    position: absolute;
-    top: 0;
+    justify-content: center;
 }
 
-.swatch {
+.palette, .circle-adjust {
+    width: 100%;
+    height: 5rem;
+    background-color: #98c1d9;
+
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 1rem;
+}
+
+/* .swatch {
     width: 24px;
     height: 24px;
     -moz-border-radius: 12px;
@@ -50,9 +57,26 @@ canvas[resize] {
     margin-left: auto;
     margin-right: auto;
     display: block;
-} */
+}  */
 
-.canvas {
+.color-circle {
+    background-color: #80ffdb;
+    height: 50px;
+    width: 50px;
+
+    border-radius: 50%;
+}
+
+.sat-circle, .hue-circle, .bright-circle {
+    background-color: #000;
+    height: 50px;
+    width: 50px;
+
+    border-radius: 50%;
+}
+
+
+#canvas {
     height: 100%;
     width: 100%;
 

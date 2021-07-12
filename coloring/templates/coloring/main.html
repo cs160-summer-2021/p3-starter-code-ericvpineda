@@ -7,35 +7,22 @@
 
 {% block js_files %}
 	<script type='text/javascript' src="{% static 'coloring/js/paper/paper-full.min.js' %}"></script>
-    <script type='text/paperscript' canvas='canvas'>
-        var p = new Path();
- 
-        function onMouseDown(event) {
-            p = new Path();
-            p.strokeColor = 'black';
-            p.strokeWidth = 5;
-        }
-
-        function onMouseDrag(event) {
-            p.add(event.point)
-        }
-    </script>
+    <script type='text/paperscript' canvas='canvas' src="{% static 'coloring/js/main.js' %}"></script>
 {% endblock js_files %}
 
 {% comment %} File for coloring template {% endcomment %}
-
 
 {% block body %}
 
     <h1 class='text-center'>Main Page</h1>
 
-    <div class="container">
+    <div class="container page-format">
 
         {% comment %} drop down  {% endcomment %}
         <div class="drop-down">
             <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown button
+                Dropdown 
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <li><a class="dropdown-item" href="#">Action</a></li>
@@ -43,21 +30,46 @@
                 <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
             </div>
+            
         </div>
 
         {% comment %} main canvas  {% endcomment %}
-        <canvas id='canvas' class='canvas' resize></canvas>
+        <div class="canvas-box">
+            <canvas id='canvas'>
+            </canvas>
+        </div>
 
         {% comment %} side tools  {% endcomment %}
-        <div class="tools">
+        <div class="tools-box"></div>
         
-        </div>
     </div>
 
-    <div class="palette">
+
+    <div class="palette-box">
+        
+       <div class="palette">
+            <div class="color-circle"></div>
+            <div class="color-circle"></div>
+            <div class="color-circle"></div>
+            <div class="color-circle"></div>
+            <div class="color-circle"></div>
+            <div class="color-circle"></div>
+            <div class="color-circle"></div>
+
+            <br>
+            <br>
+
+            <div class="sat-circle"></div>
+            <div class="hue-circle"></div>
+            <div class="bright-circle"></div>
+
+            <img src="{% static 'coloring/images/fanny_pack.jpg' %}" alt="">
+       </div>
     
     </div>
 
+
+        
     {% comment %} <canvas id="myCanvas" width="750px" height="750px"></canvas> {% endcomment %}
 	{% comment %} <div id="color-palette"></div> {% endcomment %}
 
