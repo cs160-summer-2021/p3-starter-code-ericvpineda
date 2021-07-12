@@ -1,3 +1,14 @@
+var p = new Path();
+
+function onMouseDown(event) {
+    p = new Path();
+    p.strokeColor = 'black';
+    p.strokeWidth = 5;
+}
+
+function onMouseDrag(event) {
+    p.add(event.point)
+}
 
 // window.onload = function() {
 //     var canvas = document.getElementById('myCanvas');
