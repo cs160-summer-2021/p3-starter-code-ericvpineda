@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'coloring/css/main.css' %}">
+{% endblock css_files %}
+
+{% block js_files %}
+	<script type='text/javascript' src="{% static 'coloring/js/paper/paper-full.min.js' %}"></script>
+    <script type='text/paperscript' canvas='canvas'>
+        var p = new Path();
+ 
+        function onMouseDown(event) {
+            p = new Path();
+            p.strokeColor = 'black';
+            p.strokeWidth = 5;
+        }
+
+        function onMouseDrag(event) {
+            p.add(event.point)
+        }
+    </script>
+{% endblock js_files %}
+
+{% comment %} File for coloring template {% endcomment %}
+
+
+{% block body %}
+
+    <h1 class='text-center'>Main Page</h1>
+
+    <div class="container">
+
+        {% comment %} drop down  {% endcomment %}
+        <div class="drop-down">
+            <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Dropdown button
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+            </div>
+        </div>
+
+        {% comment %} main canvas  {% endcomment %}
+        <canvas id='canvas' class='canvas' resize></canvas>
+
+        {% comment %} side tools  {% endcomment %}
+        <div class="tools">
+        
+        </div>
+    </div>
+
+    <div class="palette">
+    
+    </div>
+
+    {% comment %} <canvas id="myCanvas" width="750px" height="750px"></canvas> {% endcomment %}
+	{% comment %} <div id="color-palette"></div> {% endcomment %}
+
+{% endblock body %}

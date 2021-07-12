@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %} File for start page  {% endcomment %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'coloring/css/home.css' %}">
+{% endblock css_files %}
+    
+    {% block body %}
+        
+
+        <div class="bg-img">
+            
+            <div class="overlay">
+                <h1 class='title'>Color.it</h1>
+
+                <div class="start-btn mb-3">
+                    <button class='btn btn-primary'>Start</button>
+                </div>
+
+                <div class="upload-btn">
+                    <button class='btn btn-primary'>Upload</button>
+                </div>
+            </div>
+
+        </div>
+
+
+    {% endblock body %}

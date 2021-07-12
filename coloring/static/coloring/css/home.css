@@ -1,0 +1,35 @@
+.bg-img {
+    height: 100%;
+    width: 100%;
+        
+    background-size: cover;
+    background-position: 50% 50%;
+    background-image: url('https://www.wallpaperflare.com/static/610/739/713/nature-minimalism-trees-building-wallpaper.jpg');
+
+    position: relative;
+}
+
+.overlay {
+    height: 100%;
+    width: 100%;
+
+    background-color: rgba(0,0,0,0.15);
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    margin-top: -10rem;
+    margin-bottom: 15rem;
+
+    font-family: 'Pacifico';
+    font-size: 4rem;
+}
+
+.start-btn {
+    font-family: cursive;
+}

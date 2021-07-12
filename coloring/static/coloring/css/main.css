@@ -1,0 +1,61 @@
+.container {
+    height: 80%;
+
+    display: grid;
+
+    grid-template-columns: 1fr 5fr 1fr;
+    gap: 3rem;
+
+    justify-content: center;
+}
+
+
+.drop-down, .canvas, .tools {
+    /* background-color: purple; */
+}
+
+canvas[resize] {
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
+}
+
+.palette {
+    width: 100%;
+    height: 20%;
+    background-color: lightblue;   
+}
+
+/* #color-palette {
+    width: 300px;
+    background-color: #f1f1f1;
+    display: flex;
+    flex-wrap: wrap;
+    position: absolute;
+    top: 0;
+}
+
+.swatch {
+    width: 24px;
+    height: 24px;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    border-radius: 12px;
+    margin: 3px;
+}
+
+#myCanvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+} */
+
+.canvas {
+    height: 100%;
+    width: 100%;
+
+    margin: auto;
+    display: block;
+}
