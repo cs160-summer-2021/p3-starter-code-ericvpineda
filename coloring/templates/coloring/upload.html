@@ -3,8 +3,34 @@
 
 {% comment %} File for upload images  {% endcomment %}
 
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'coloring/css/upload.css' %}">
+{% endblock css_files %}
+
+{% block js_files %}
+    <script>
+        async function uploadFile() {
+            let formData = new FormData();           
+            formData.append("file", fileupload.files[0]);
+            /*
+            await fetch('./upload.php', {
+            method: "POST", 
+            body: formData
+            });    
+            */
+            alert('The file has been uploaded successfully.');
+        }
+    </script>
+{% endblock js_files %}
+
 {% block body %}
 
     <h1>Upload Page</h1>
-
+        <div class = "container">
+            <div id = "button-container">
+                <input id="fileupload" type="file" name = "fileupload">
+                <br>
+                <button id = "upload-button" onClick = "uploadFile()"> Upload New Template</button>
+            </div>
+        </div>
 {% endblock body %}
