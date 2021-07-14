@@ -1,12 +1,134 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'coloring/css/search.css' %}">
+{% endblock css_files %}
+
 {% comment %} File for searching templates  {% endcomment %}
 
 {% block body %}
 
-    <h1>Search Page</h1>
+    <main id='container'>
 
+        {% comment %} search bar  {% endcomment %}
+        <div class="search-bar mb-5">
+
+            <form href='' class="input-group rounded">
+                <input type="search" class="form-control rounded" placeholder="Search Templates" aria-label="Search"
+                    aria-describedby="search-addon" />
+                <span class="input-group-text border-0" id="search-addon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </span>
+            </form>
+
+        </div>
+
+        <div class="search-results">
+            
+            <ul>
+
+                <li>
+                    <article class='post'>
+                    
+                        <a href="{% url 'main' %}">
+                            <img src="{% static 'coloring/images/draw_demo.png' %}" alt="">
+                        </a>
+
+                        <div class="title">
+                            <h3>Sea Turtle</h3>
+                        </div>
+
+                    </article>
+                </li>
+                <li>
+                    <article class='post'>
+
+                        <a href="">
+                            <img src="{% static 'coloring/images/p2.jpg' %}" alt="">
+                        </a>
+
+                        <div class="title">
+                            <h3>Butterfly</h3>
+                        </div>
+
+                    </article>
+                </li>
+                <li>
+                    <article class='post'>
+
+                        <a href="">
+                            <img src="{% static 'coloring/images/p3.jpg' %}" alt="">
+                        </a>
+
+                        <div class="title">
+                            <h3>Camel</h3>
+                        </div>
+
+                    </article>
+                </li>
+                <li>
+                    <article class='post'>
+
+                        <a href="">
+                            <img src="{% static 'coloring/images/p4.jpg' %}" alt="">
+                        </a>
+
+                        <div class="title">
+                            <h3>Dog</h3>
+                        </div>
+
+                    </article>
+                </li>
+                <li>
+                    <article class='post'>
+
+                        <a href="">
+                            <img src="{% static 'coloring/images/p5.jpg' %}" alt="">
+                        </a>
+
+                        <div class="title">
+                            <h3>Fish</h3>
+                        </div>
+
+                    </article>
+                </li>
+                <li>
+                    <article class='post'>
+
+                        <a href="">
+                            <img src="{% static 'coloring/images/p6.jpg' %}" alt="">
+                        </a>
+
+                        <div class="title">
+                            <h3>Chameleon</h3>
+                        </div>
+
+                    </article>
+                </li>
+                <li>
+                    <article class='post'>
+
+                        <a href="">
+                            <img src="{% static 'coloring/images/p7.jpg' %}" alt="">
+                        </a>
+
+                        <div class="title">
+                            <h3>Butterfly</h3>
+                        </div>
+
+                    </article>
+                </li>
+
+            </ul>
+
+
+        </div>
+
+
+    </main>
     
 
 

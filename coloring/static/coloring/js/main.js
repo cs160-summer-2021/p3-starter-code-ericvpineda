@@ -10,6 +10,10 @@ $(document).ready(function () {
     var path;
     var elem = 'paintbrush';
     var $curr_color = $('#c1') 
+    $curr_color.css('max-width', '65px');
+    $curr_color.css('min-height', '65px');
+    var $curr_tool = $('#paintbrush')
+    var $prev_tool = $curr_tool;
 
     // var raster = new paper.Raster({
     //     source : '../../static/coloring/images/draw_demo.png', 
@@ -22,7 +26,8 @@ $(document).ready(function () {
         'pen' : pen,
         'eraser' : eraser,
         'undo' : undo,
-        'redo' : redo
+        'redo' : redo,
+        'trash' : trash
     }
 
     var history = [];
@@ -32,19 +37,42 @@ $(document).ready(function () {
         onMouseDrag : onMouseDrag
     })
 
-    $('.tool').click( function () {
+    $('.tool-container').click( function () {
+        
         elem = $(this).attr('id');
+        
+        if (elem !== 'undo' && elem !== 'redo' && elem !== 'trash') {
+            $curr_tool.css('min-width', '3.3rem');
+            $curr_tool.css('min-height', '3.3rem');
+            $(this).css('transition', 'ease-in 0.2s');
+            
+            console.dir($prev_tool)
+            if ($prev_tool) {
+                $prev_tool.css('min-width', '3.3rem');
+                $prev_tool.css('min-height', '3.3rem');
+                $(this).css('transition', 'ease-in 0.2s');
+            }
+        } else {
+            $prev_tool = $curr_tool;
+        }
+
+        $curr_tool = $(this)
         const selected = utensils[elem];
         tool.onMouseDrag = onMouseDrag;
 
-        if ( elem === 'undo' || elem === 'redo') {
+        if ( elem === 'undo' || elem === 'redo' || elem == 'trash') {
             selected();
         } else if (elem === 'eraser') {
             tool.onMouseDown = selected;
             tool.onMouseDrag = selected;
+            $(this).css('min-width', '70px');
+            $(this).css('min-height', '70px');
         }
         else {
             tool.onMouseDown = selected;
+            $(this).css('min-width', '70px');
+            $(this).css('min-height', '70px');
+
         }
     })
 
@@ -112,12 +140,20 @@ $(document).ready(function () {
             history.pop();
         } 
     }
+    
+    function trash () {
+        history.push(project.activeLayer.children);
+        project.clear()
+    }
 
     // change color 
     $('.color-circle').click(function () {
         if (elem !== 'eraser' && elem !== 'redo' && 
         elem !== 'undo') {
+            $curr_color.css('max-width', '50px');
+            $curr_color.css('min-height', '50px');
             $curr_color = $(this);
+            $(this).css('transition', 'ease-in 0.2s');
             const select = $(this).css('background-color')
             tool.onMouseDown = (event) => {
                 path = new Path({
@@ -126,6 +162,8 @@ $(document).ready(function () {
                 });
                 path.add(event.point)
             }
+            $curr_color.css('max-width', '65px');
+            $curr_color.css('min-height', '65px');
         }
     })
 
