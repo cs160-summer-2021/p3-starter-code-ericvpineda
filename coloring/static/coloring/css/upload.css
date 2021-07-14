@@ -1,0 +1,21 @@
+.container{
+    background-color:rgb(115, 255, 0);
+    height: 100%;
+    width: 100%;
+}
+h1{
+    text-align: center;
+}
+
+#button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button, input{
+    height: 30px;
+    width: 20%;
+    margin-top: 35%;
+    float: left;
+}
