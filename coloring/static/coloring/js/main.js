@@ -1,25 +1,35 @@
-// demo image 
-// var img = document.createElement('img');
-// img.src = '../../static/coloring/images/draw_demo.png'
-
-
 paper.install(window)
-$(document).ready(function () {
+$(document).ready( async function () {
 
-    paper.setup('canvas');
+    await paper.setup('canvas');
     var path;
     var elem = 'paintbrush';
-    var $curr_color = $('#c1') 
-    $curr_color.css('max-width', '65px');
-    $curr_color.css('min-height', '65px');
+
+    // enlarge current cup 
+    var $curr_color_cup = $('#c1');
+    $curr_color_cup.css('max-width', '65px').css('min-height', '65px');
+    $curr_color_cup.css('transition', 'ease-in 0.2s');
+    var curr_color = $curr_color_cup.css('background-color');
+
+    // tools 
     var $curr_tool = $('#paintbrush')
     var $prev_tool = $curr_tool;
 
-    // var raster = new paper.Raster({
-    //     source : '../../static/coloring/images/draw_demo.png', 
-    //     position: view.center
-    // })
+    // range slider variables 
+    const $hue_slider = $('#hue-slider');
+    const $sat_slider = $('#sat-slider');
+    const $light_slider = $('#light-slider');
 
+    // create canvas image 
+    var canvas_box = document.querySelector('#canvas');
+    var img = document.createElement('img');
+    img.src = '../../static/coloring/images/draw_demo.png'
+    img.id = 'draw_demo'
+    canvas_box.append(img)
+    var raster = new paper.Raster('draw_demo')
+    raster.position = view.center;
+
+    // functions
     utensils = {
         'paintbrush' : paintBrush,
         'pencil' : pencil,
@@ -27,11 +37,15 @@ $(document).ready(function () {
         'eraser' : eraser,
         'undo' : undo,
         'redo' : redo,
-        'trash' : trash
+        'trash' : trash,
+        'center-img' : center_img,
+        'move' : paperDrag
     }
 
+    // keep track of previous layers 
     var history = [];
     
+    // create start tool 
     var tool = new Tool({
         onMouseDown : paintBrush,
         onMouseDrag : onMouseDrag
@@ -41,16 +55,20 @@ $(document).ready(function () {
         
         elem = $(this).attr('id');
         
+        // decrease prev selected tool 
         if (elem !== 'undo' && elem !== 'redo' && elem !== 'trash') {
-            $curr_tool.css('min-width', '3.3rem');
-            $curr_tool.css('min-height', '3.3rem');
-            $(this).css('transition', 'ease-in 0.2s');
+            $curr_tool.css({
+                'min-width' : '3.3rem',
+                'min-height' : '3.3rem',
+                'transition' : 'ease-in 0.2s'
+            })
             
-            console.dir($prev_tool)
             if ($prev_tool) {
-                $prev_tool.css('min-width', '3.3rem');
-                $prev_tool.css('min-height', '3.3rem');
-                $(this).css('transition', 'ease-in 0.2s');
+                $prev_tool.css({
+                    'min-width' : '3.3rem',
+                    'min-height' : '3.3rem',
+                    'transition' : 'ease-in 0.2s'
+                })
             }
         } else {
             $prev_tool = $curr_tool;
@@ -60,27 +78,33 @@ $(document).ready(function () {
         const selected = utensils[elem];
         tool.onMouseDrag = onMouseDrag;
 
-        if ( elem === 'undo' || elem === 'redo' || elem == 'trash') {
+        if ( elem === 'undo' || elem === 'redo' || elem == 'trash' || elem == 'center-img') {
             selected();
-        } else if (elem === 'eraser') {
-            tool.onMouseDown = selected;
-            tool.onMouseDrag = selected;
-            $(this).css('min-width', '70px');
-            $(this).css('min-height', '70px');
-        }
-        else {
-            tool.onMouseDown = selected;
-            $(this).css('min-width', '70px');
-            $(this).css('min-height', '70px');
+        } else {
 
+            if (elem === 'eraser') {
+                tool.onMouseDown = selected;
+                tool.onMouseDrag = selected;
+
+            } else if(elem === 'move') {
+                tool.onMouseDrag = paperDrag
+            }
+            else {
+                tool.onMouseDown = selected;
+            }
+            $(this).css({
+                'min-width' : '70px',
+                'min-height' : '70px'
+            });
         }
     })
+
 
     // ALL TOOLS
     function paintBrush (event) {
         path = new Path({
-            strokeColor : 'black',
-            strokeWidth : '10',
+            strokeColor : curr_color,
+            strokeWidth : '8',
         });
         path.add(event.point);
         tool.onMouseUp = null;
@@ -88,7 +112,7 @@ $(document).ready(function () {
 
     function pencil (event) {
         path = new Path({
-            strokeColor : 'grey',
+            strokeColor : curr_color,
             strokeWidth : '2',
         });
         path.add(event.point);
@@ -97,19 +121,22 @@ $(document).ready(function () {
     
     function pen (event) {
         path = new Path({
-            strokeColor : 'black',
+            strokeColor : curr_color,
             strokeWidth : '3',
         });
         path.add(event.point)
         tool.onMouseUp = make_smooth;
     }
 
-    function eraser (event) {
+    function eraser () {
         path = null;
         const layer = project.activeLayer.children;
         var n = layer.length;
         for (let i = 0; i < n; i++) {
             let curr = layer[i]; 
+            if (curr._image) {
+                continue;
+            }
             curr.onClick = () => {
                 history.push(curr)
                 curr.remove();
@@ -122,17 +149,13 @@ $(document).ready(function () {
         tool.onMouseUp = null;
     }
 
-    function undo () {
-        var layers = project.activeLayer.children;
-        var n = layers.length;
-        if (n > 0) {
-            var topChild = layers[n - 1];
-            history.push(topChild);
-            topChild.remove();
-        } 
-    }
+    function paperDrag(event) {
+        paper.view.center = event.downPoint.subtract(
+            event.point).add(paper.view.center);
+    };
 
-    function redo () {
+
+    function undo () {
         var layers = project.activeLayer;
         var n = history.length;
         if (n > 0) {
@@ -140,19 +163,41 @@ $(document).ready(function () {
             history.pop();
         } 
     }
-    
-    function trash () {
-        history.push(project.activeLayer.children);
-        project.clear()
+
+    function redo () {
+        var layers = project.activeLayer.children;
+        var n = layers.length;
+        if (n > 1) {
+            console.log('here')
+            var topChild = layers[n - 1];
+            history.push(topChild);
+            topChild.remove();
+        } 
     }
+    
+    // note: how to save total delete ??
+    function trash () {
+        project.clear()
+        project.activeLayer.addChild(raster);
+    }
+
+    const old_zoom = paper.view.zoom;
+    const old_center = paper.view.center;
+
+    function center_img () {
+        paper.view.zoom = old_zoom;
+        paper.view.center = old_center;
+    }   
 
     // change color 
     $('.color-circle').click(function () {
-        if (elem !== 'eraser' && elem !== 'redo' && 
-        elem !== 'undo') {
-            $curr_color.css('max-width', '50px');
-            $curr_color.css('min-height', '50px');
-            $curr_color = $(this);
+        if (elem !== 'eraser' && elem !== 'redo' && elem !== 'undo') {
+            $curr_color_cup.css({
+                'max-width': '50px',
+                'max-height': '50px',
+                'min-height' : '50px'
+            });
+            $curr_color_cup = $(this);
             $(this).css('transition', 'ease-in 0.2s');
             const select = $(this).css('background-color')
             tool.onMouseDown = (event) => {
@@ -162,8 +207,15 @@ $(document).ready(function () {
                 });
                 path.add(event.point)
             }
-            $curr_color.css('max-width', '65px');
-            $curr_color.css('min-height', '65px');
+            
+            const color = new Color(select, null, null, null);
+            // console.log($hue_slider)
+            $hue_slider.val(color.h);
+            $sat_slider.val(color.s);
+            $light_slider.val(color.l);
+            
+            $curr_color_cup.css('max-width', '65px');
+            $curr_color_cup.css('min-height', '65px');
         }
     })
 
@@ -177,7 +229,6 @@ $(document).ready(function () {
         path.simplify()
     }
 
-    const $hue_slider = $('#hue-slider');
     $hue_slider.on('input', () => {
         if (path.strokeColor._canvasStyle) {
             var color = new Color(`${path.strokeColor._canvasStyle}`, $hue_slider[0].value, null, null)
@@ -191,11 +242,10 @@ $(document).ready(function () {
                 path.add(event.point)
             }
             
-            $curr_color.css('background-color', new_hue);
+            $curr_color_cup.css('background-color', new_hue);
         }
     })
-
-    const $sat_slider = $('#sat-slider');
+  
     $sat_slider.on('input', () => {
         if (path.strokeColor._canvasStyle) {
             var color = new Color(`${path.strokeColor._canvasStyle}`, null, $sat_slider[0].value, null)
@@ -209,11 +259,10 @@ $(document).ready(function () {
                 path.add(event.point)
             }
 
-            $curr_color.css('background-color', new_sat);
+            $curr_color_cup.css('background-color', new_sat);
         }
     })
    
-    const $light_slider = $('#light-slider');
     $light_slider.on('input', () => {
         if (path.strokeColor._canvasStyle) {
             var color = new Color(`${path.strokeColor._canvasStyle}`, null, null, $light_slider[0].value,)
@@ -227,10 +276,31 @@ $(document).ready(function () {
                 path.add(event.point)
             }
             
-            $curr_color.css('background-color', new_light);
+            $curr_color_cup.css('background-color', new_light);
         }
     })
 
+    $('canvas').on('mousewheel', function(event) {
+
+        var prev_zoom = paper.view.zoom;
+        var prev_center = paper.view.center;
+        var curr_mouse = view.viewToProject(
+            new Point(event.offsetX, event.offsetY));
+
+        // update zoom view 
+        var FACTOR = 1.05;
+        if (event.deltaY > 0) {
+            paper.view.zoom = prev_zoom * FACTOR;
+        } else {
+            paper.view.zoom = prev_zoom / FACTOR;
+        } 
+
+        // Update position view.
+        var x = (curr_mouse.x - prev_center.x) * (1 - (prev_zoom / paper.view.zoom))
+        var y = (curr_mouse.y - prev_center.y) * (1 - (prev_zoom / paper.view.zoom))
+        paper.view.setCenter(paper.view.center.x + x, paper.view.center.y + y);
+    
+    });
 })
 
 class Color {
@@ -248,7 +318,6 @@ class Color {
 
     hsl() {
         const {h,s,l} = this;
-        console.log(`hsl(${h},${s}%,${l}%)`)
         return `hsl(${h},${s}%,${l}%)`
     }
 
@@ -290,80 +359,3 @@ class Color {
 }
 
 
-// more on classes 
-
-
-// var p = new Path();
-
-// function onMouseDown(event) {
-//     p = new Path();
-//     p.strokeColor = 'black';
-//     p.strokeWidth = 5;
-// }
-
-// function onMouseDrag(event) {
-//     p.add(event.point)
-// }
-
-// coloring page
-// var mandala = {
-//     item: null,
-//     lastClicked: null,
-//     filePath: '/static/coloring/images/mandala-freepik.svg'
-// };
-
-// color palette
-// var cp = {
-//     history: ["#000000"], // black selected by default
-//     options: [],
-//     $container: $('#color-palette')
-// }
-
-// myCustomInteraction()
-
-// create a color palette with the given colors
-// function createColorPalette(colors){
-
-//     // create a swatch for each color
-//     for (var i = colors.length - 1; i >= 0; i--) {
-//         var $swatch = $("<div>").css("background-color", colors[i]).addClass("swatch");
-//         $swatch.click(function(){
-//             // add color to the color palette history
-//                 cp.history.push($(this).css("background-color"));
-//         });
-//         cp.$container.append($swatch);
-//     }
-// }
-
-// loads a set of colors from a json to create a color palette
-// function getColorsCreatePalette(){
-//     cp.$container.html(" ");
-//     $.getJSON('/static/coloring/vendors/material/material-colors.json', function(colors){
-//         var keys = Object.keys(colors);
-//         for (var i = keys.length - 1; i >= 0; i--) {
-//             cp.options.push(colors[keys[i]][500]);
-//         }
-//         createColorPalette(cp.options);
-//     });
-// }
-
-// function init(){
-    // paper.setup(canvas);
-    // getColorsCreatePalette();
-// myCustomInteraction();
-
-    // paper.project.importSVG(mandala.filePath, function(item) {
-    //     mandala.item = item._children["design-freepik"];
-    //     paper.project.insertLayer(0,mandala.item);
-
-    //     if (custom) {
-    //         myCustomInteraction();
-    //     } else {
-    //         myGradientInteraction();
-    //     }
-
-    // });
-// }
-
-// Set up the mandala interactivity.
-// init();

@@ -6,8 +6,10 @@
 {% endblock css_files %}
 
 {% block js_files %}
-	<script type='text/javascript' src="{% static 'coloring/js/paper/paper-full.min.js' %}"></script>
+	<script type='text/javascript' canvas='canvas' src="{% static 'coloring/js/paper/paper-full.min.js' %}"></script>
     <script type='text/javascript' canvas='canvas' src="{% static 'coloring/js/main.js' %}"></script>
+    {% comment %} <script type='text/paperscript' src="{% static 'coloring/js/export.js' %}"></script> {% endcomment %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
 {% endblock js_files %}
 
 {% comment %} File for coloring template {% endcomment %}
@@ -19,7 +21,7 @@
         {% comment %} drop down  {% endcomment %}
 
         {% comment %} main canvas  {% endcomment %}
-        <div class="canvas-box">
+        <div class="canvas-box" > 
             <canvas id='canvas' resize>
             </canvas>
         </div>
@@ -50,6 +52,18 @@
                 <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
                 </svg>
             </div>
+
+            <div class='tool-container' id="move">
+                <svg class='tools' xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10zM.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8z"/>
+                </svg>
+            </div>
+
+            <div class='tool-container' id="center-img">
+                <svg class='tools' xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-easel" viewBox="0 0 16 16">
+                <path d="M8 0a.5.5 0 0 1 .473.337L9.046 2H14a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-1.85l1.323 3.837a.5.5 0 1 1-.946.326L11.092 11H8.5v3a.5.5 0 0 1-1 0v-3H4.908l-1.435 4.163a.5.5 0 1 1-.946-.326L3.85 11H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h4.954L7.527.337A.5.5 0 0 1 8 0zM2 3v7h12V3H2z"/>
+                </svg>
+            </div>
             
             <div class='tool-container' id="undo">
                 <svg class='tools' xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
@@ -68,7 +82,6 @@
                 <path d="M14 3a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2zM3.215 4.207l1.493 8.957a1 1 0 0 0 .986.836h4.612a1 1 0 0 0 .986-.836l1.493-8.957C11.69 4.689 9.954 5 8 5c-1.954 0-3.69-.311-4.785-.793z"/>
                 </svg>
             </div>
-
         </div>
         
     </div>
@@ -93,21 +106,21 @@
                 <div class="" >
                 
                     <label for="r1">H</label>
-                    <input class='color-range form-range' type="range" min='0' max='360' value='' id="hue-slider">
+                    <input class='color-range form-range' type="range" min='0' max='360' value='159' id="hue-slider">
 
                 </div>
 
                 <div class="">
                 
                     <label for="r2" >S</label>
-                    <input class='color-range form-range' min='0' max='100' type="range" id="sat-slider">
+                    <input class='color-range form-range' min='0' max='100' value='55.6' type="range" id="sat-slider">
 
                 </div>
                 
                 <div class="">
                 
                     <label for="r3" class="form-label">L</label>
-                    <input class='color-range form-range' min='0' max='100' type="range" id="light-slider">
+                    <input class='color-range form-range' min='0' max='100' value='7.1' type="range" id="light-slider">
                 
                 </div>
 

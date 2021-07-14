@@ -16,16 +16,17 @@ body {
     border-bottom: 2rem;
 
     margin-top: 2rem;
+    margin-left: 7rem;
 }
 
 .canvas-box {
     border: 1px solid black;
     border-radius: 15px;
 
-    background-image: url('../../coloring/images/draw_demo.png');
-    background-size: contain;
+    /* background-image: url('../../coloring/images/draw_demo.png'); */
+    /* background-size: contain;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center; */
 }
 
 .tool-box {
@@ -33,14 +34,15 @@ body {
 
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
+    justify-content: center;
     align-items: center;
 
-    height: 80%;
-    max-width: 5rem;
+    /* height: 80%; */
+    /* max-width: 5rem; */
 
     border-top: 10rem;
     border-radius: 12px;
+    margin-left: -5rem;
 }
 
 .tool-container {
@@ -61,15 +63,17 @@ body {
 
     width: 3.3rem;
     height: 3.3rem;
+
+    background-color: #fff;
 }
 
 .tools {
     width: 2rem;
     height: 2rem;
-    color: #33b28e;
+    color: #606c38;
 }
 
-.normal-tool-size {
+/* .normal-tool-size {
     min-width: 3.3rem;
     min-height: 3.3rem;
 }
@@ -77,12 +81,15 @@ body {
 .action-tool-size {
     min-width: 70px; 
     min-height: 70px;
-}
+} */
 
 .palette-box {
-    width: 100%;
-    height: 5rem;
+    /* width: 100%;
+    height: 5rem; */
     /* background-color: purple;    */
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    margin-left: 7rem;
 }
 
 
@@ -93,6 +100,7 @@ body {
     /* background-color: lightblue; */
 
     border-radius: 12px;
+    background-color: rgb(160, 188, 151);
 }
 
 
