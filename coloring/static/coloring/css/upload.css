@@ -1,21 +1,40 @@
+body{
+    background-image: url('https://www.wallpaperflare.com/static/610/739/713/nature-minimalism-trees-building-wallpaper.jpg');
+}
 .container{
-    background-color:rgb(115, 255, 0);
     height: 100%;
     width: 100%;
 }
 h1{
     text-align: center;
+    margin-top: 100px;
 }
-
+#fileupload{
+    color: green;
+}
 #button-container{
+    height: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+
 button, input{
     height: 30px;
     width: 20%;
-    margin-top: 35%;
-    float: left;
+    margin-top: 15%;
+}
+
+button{
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50; /* Green */
+    height: 40px;
+}
+
+button:hover {
+    background-color: #4CAF50; /* Green */
+    color: white;
 }
