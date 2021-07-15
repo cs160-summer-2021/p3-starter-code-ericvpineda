@@ -313,7 +313,7 @@ class Color {
         this.hue = hue;
         this.sat = sat;
         this.light = light;
-        this.calcHSL();
+        this.convert_hsl();
     }
 
     hsl() {
@@ -321,35 +321,41 @@ class Color {
         return `hsl(${h},${s}%,${l}%)`
     }
 
-    calcHSL() {
+    convert_hsl() {
+
         let {r,g,b} = this;
 
         r /= 255;
         g /= 255;
         b /= 255;
+        
+        var max_val = Math.max(r,g,b);
+        var min_val = Math.min(r,g,b);
+        var d = max_val - min_val, h = 0, s = 0, l = 0;
     
-        let cmin = Math.min(r,g,b),
-        cmax = Math.max(r,g,b),
-        delta = cmax - cmin,
-        h = 0,
-        s = 0,
-        l = 0;
-    
-        if (delta == 0) {h = 0}
-        else if (cmax == r) {h = ((g - b) / delta) % 6;}
-        else if (cmax == g) {h = (b -r) / delta +2}
-        else {h = (r - g) / delta + 4}
+        if (d == 0) {
+            h = 0
+        } else if (r == max_val) {
+            h = ((g - b) / d) % 6;
+        } else if (g == max_val) {
+            h = (b -r) / d +2
+        } else {
+            h = (r - g) / d + 4
+        }
     
         h = Math.round(h * 60);
+        h = h < 0 ? h + 360 : h
     
-        if (h < 0) {h += 360};
+        l = (max_val + min_val) / 2;
     
-        l = (cmax + cmin) / 2;
+        if (d != 0) {
+            s = d / (1 - Math.abs(2 * l - 1));
+        } else {
+            s = 0
+        }
     
-        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-    
-        s = +(s * 100).toFixed(1);
-        l = +(l * 100).toFixed(1);
+        s = +(100 * s).toFixed(1);
+        l = +(100 * l).toFixed(1);
 
         // note: can set new attributes 
         this.h = this.hue || h;
