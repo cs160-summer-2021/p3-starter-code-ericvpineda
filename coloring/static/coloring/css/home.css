@@ -33,3 +33,13 @@
 .start-btn {
     font-family: cursive;
 }
+
+#start, #upload {
+    padding: 1rem 2rem 1rem 2rem;
+    background-color: black;
+    color: white;
+
+    font-size: 1.2rem;
+
+    border: 5px solid white;
+}

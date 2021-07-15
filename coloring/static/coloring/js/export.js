@@ -1,36 +1,28 @@
-var canvas_box = document.querySelector('#canvas');
-var img = document.createElement('img');
-img.src = '../../static/coloring/images/draw_demo.png'
-img.id = 'draw_demo'
-canvas_box.append(img)
-
-var raster = new paper.Raster('draw_demo')
-raster.position = view.center;
-
-
-  // allow panning image 
-function onMouseDrag(event) {
-    paper.view.center = event.downPoint.subtract(
-        event.point).add(paper.view.center);
-};
-
-
-$('canvas').on('mousewheel', function(event) {
-
-    var prev_zoom = paper.view.zoom;
-    var prev_center = paper.view.center;
-    var curr_mouse = view.viewToProject(
-        new Point(event.offsetX, event.offsetY));
-
-    // update zoom view 
-    var FACTOR = 1.05;
-    if (event.deltaY > 0) {
-        view.zoom = prev_zoom * FACTOR;
-    } else {
-        view.zoom = prev_zoom / FACTOR;
-    } 
-
-    // Update position view.
-    paper.view.center += (curr_mouse - prev_center) * (1 - (prev_zoom / view.zoom));
-   
-});
+var dict = {
+    "jpg":'https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg',
+    "png":'https://lh3.googleusercontent.com/proxy/g49vkUkOfSA9EaW5Rl1b_olh08XcPJwGJrKtEct5KndvSnLN4X2RNCt0XyFmMzccD3Oy1TV0dan6bKu0GEmcGEBmXTihnpK6aRRLbqsvNFhYMtprDiUzOR8VJtGJ0v4JQRWdXyijgth_',
+    "psd":'https://images.squarespace-cdn.com/content/v1/5a2c764af43b551b489c752d/1519112194919-IF8HBNVNKAB2A8PTV9O9/javacatscafe18Feb20180118.jpg?format=2500w',
+    "gif":'https://media2.giphy.com/media/3o6Zt481isNVuQI1l6/200.gif',
+    "pdf":'https://upload.wikimedia.org/wikipedia/commons/d/dc/Young_cats.jpg'
+}
+function download() {
+    axios({
+        url: dict[$("#format-values").val()],
+        method: 'GET',
+        responseType: 'blob'
+    })
+        .then((response) => {
+                var fileName = $("#file-name").val();
+                if(fileName == ""){
+                    fileName = 'image';
+                }
+                const url = window.URL
+                    .createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download',fileName+'.'+$("#format-values").val());
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+        })
+}
